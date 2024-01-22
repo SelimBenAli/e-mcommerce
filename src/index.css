@@ -1,0 +1,34 @@
+@import url("https://fonts.googleapis.com/css?family=Nunito:400,700");
+
+body {
+  margin: 0;
+  font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+
+.qss{
+  background-color: rgb(86, 201, 192);
+  color: rgb(255, 255, 255);
+}
+.t{
+  color: aliceblue;
+  font-size: 30px;
+}
+
+/* .body {
+  background-image: url('C:/DSI23 PART2/stage 2eme/ecommerce_react-master/ecommerce_react-master/mus.jpg');
+  background-size: cover; 
+  background-position: center; 
+  background-repeat: no-repeat;
+}
+
+ */
