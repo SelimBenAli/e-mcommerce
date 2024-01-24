@@ -14,7 +14,7 @@ const initState = {
   categories: []
 };
 
-const Url = 'http://192.168.1.13:8086';
+const Url = 'http://127.0.0.1:8086';
 
 class AddProduct extends Component {
   constructor(props) {
@@ -23,7 +23,7 @@ class AddProduct extends Component {
     console.log(categories);
     this.state = {
       ...initState,
-      categories: categories,
+      categories: categories, // Update the state with categories
     };
   }
 

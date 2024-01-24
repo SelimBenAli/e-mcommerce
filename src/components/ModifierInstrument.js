@@ -3,59 +3,80 @@ import withContext from "../withContext";
 import { Redirect } from "react-router-dom";
 
 const initState = {
+    IDInstrument:"",
   name: "",
   price: "",
   stock: "",
   shortDesc: "",
   description: "",
-  categorie :"",
-  Image: "" ,
-
-  categories: []
+  categorie: "",
+  Image: "",
+  categories: [],
+  instrumentId: null, // Initialize instrumentId in state
+  instName: "",
+  instPrice: 0, // or initialize with the appropriate default value
+  instStock: 0,
 };
 
-const Url = 'http://192.168.1.13:8086';
+const Url = "http://192.168.1.13:8086";
 
-class AddProduct extends Component {
-  constructor(props) {
-    super(props);
-    const { categories } = props.context;
-    console.log(categories);
-    this.state = {
-      ...initState,
-      categories: categories,
-    };
-  }
+class ModifierInstrument extends Component {
+    
+    constructor(props) {
+        super(props);
+        const { categories } = props.context;
+        console.log(categories);
+        this.state = {
+          ...initState,
+          categories: categories,
+          instrumentId: null, // Initialize instrumentId in state
+        };
+      }
 
-
+      componentDidMount() {
+        // Access the instrumentId from the location state
+        const { state } = this.props.location;
+        console.log(state.instrumentId, state.instName)
+        this.setState({
+            IDInstrument: state.instrumentId,
+            name: state.instName || "", 
+            price: state.instPrice || 0,
+            stock: state.instStock || 0,
+            shortDesc : state.intshortDesc,
+            description:state.description,
+          });
+      }
+    
+      
   save = async (e) => {
     e.preventDefault();
-    const { name, price, stock, shortDesc, description, categorie } = this.state;
+    const { IDInstrument,name, price, stock, shortDesc, description, categorie } = this.state;
 
     if (name && price) {
       try {
-        const response = await fetch(Url + '/api/create-instrument', {
+        const response = await fetch(Url + "/api/update-instrument", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
           },
           body: JSON.stringify({
+            IDInstrument,
             name,
             price,
             shortDesc,
             description,
             categorie,
-            stock: stock || 0,
-          }),
+            stock: stock || 0
+          })
         });
 
         if (response.ok) {
           // Product added successfully, you can handle the response as needed
-          console.log("Product added successfully");
+          console.log("Product modified successfully");
           this.setState(initState);
         } else {
           // Handle errors
-          console.error("Failed to add product");
+          console.error("Failed to modify product");
         }
       } catch (error) {
         console.error("Error:", error);
@@ -69,15 +90,17 @@ class AddProduct extends Component {
     this.setState({ [e.target.name]: e.target.value, error: "" });
 
   render() {
-    const { name, price, stock, shortDesc, description, categorie, Image } = this.state;
+    const {name, price, stock, shortDesc, description, categorie, Image } = this.state;
     const { user } = this.props.context;
-    return !(user && user.accessLevel < 1) ? (
-      <Redirect to="/" />
-    ) : (
+
+    if (!(user && user.accessLevel < 1)) {
+      return <Redirect to="/" />;
+    }
+    return (
       <Fragment>
         <div className="hero is-primary ">
           <div className="hero-body container">
-            <h4 className="title">Add Instrument </h4>
+            <h4 className="title">Modifier Instrument </h4>
           </div>
         </div>
         <br />
@@ -181,15 +204,15 @@ class AddProduct extends Component {
                   type="submit"
                   onClick={this.save}
                 >
-                  Submit
+                  Modifier
                 </button>
               </div>
             </div>
           </div>
         </form>
       </Fragment>
-    );
+    )
   }
 }
 
-export default withContext(AddProduct);
+export default withContext(ModifierInstrument);

@@ -18,7 +18,7 @@ class AddCategorie extends Component {
     const { nom, description } = this.state;
     if (nom && description) {
       try {
-        const response = await fetch("http://192.168.1.13:8086/api/create-categorie", {
+        const response = await fetch("http://127.0.0.1:8086/api/create-categorie", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -30,6 +30,7 @@ class AddCategorie extends Component {
         });
 
         if (response.ok) {
+          // Assuming AddCategorie is an asynchronous function, use it here
           await this.props.context.AddCategorie({
             nom,
             description,

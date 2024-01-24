@@ -5,33 +5,9 @@ import { Link } from "react-router-dom";
 class ProductListAdmin extends Component {
   deleteProduct = async (productId) => {
     console.log("delete", productId);
-      try {
-        const response = await fetch("http://192.168.1.13:8086/api/delete-instrument", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            productId,
-          }),
-        });
-
-        if (response.ok) {
-          await this.props.context.AddCategorie({
-            productId,
-          });
-        } else {
-          console.error("Failed to save:", response.statusText);
-        }
-      } catch (error) {
-        console.error("Error during save:", error.message);
-      }
-     
+    // You can add the logic to delete the product here
   };
 
-  handleChange = (e) => this.setState({ [e.target.name]: e.target.value, error: "" });
-
-  
   render() {
     const { products } = this.props.context;
 
@@ -39,17 +15,9 @@ class ProductListAdmin extends Component {
       <Fragment>
         <div className="hero qss">
           <div className="hero-body container">
-          <div className="field has-addons">
-      <div className="control">
-        <input className="input" type="text" placeholder="Search" />
-      </div>
-      {/* <div className="control">
-        <button className="button is-info">Search</button>
-      </div> */}
-      </div>
+            {/* <p className="t"></p> */}
+          </div>
         </div>
-        </div>
-
         <br />
         <div className="container">
           <div className="card">
@@ -85,15 +53,12 @@ class ProductListAdmin extends Component {
                           </button>
                         </td>
                         <td>
-                        <Link
-                          to={{
-                            pathname: '/ModifierInstrument',
-                            state: { instrumentId: product.IDInstrument,instName:product.name,instPrice:product.price,instStock:product.stock,intshortDesc:product.shortDesc,intDesc:product.description}
-                          }}
-                          className="button is-success"
-                        >
-                          Modifier
-                        </Link>
+                          <Link
+                            to={`/updateInstrumentPage/${product.IDInstrument}`}
+                            className="button is-success"
+                          >
+                            Modifier
+                          </Link>
                         </td>
                       </tr>
                     ))

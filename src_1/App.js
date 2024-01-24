@@ -10,13 +10,8 @@ import {data, fetchData} from "./Data";
 import Context from "./Context";
 import "./index.css";
 import Signup from "./components/signup";
+import UpdateInstrumentPage from "./components/UpDateIns/UpdateInstrumentPage";
 import CategoryListAdmin from "./components/CategoryListAdmin";
-import ModifierInstrument from "./components/ModifierInstrument";
-import modifierCategorie from "./components/modifierCategorie";
-import ProductView from "./components/ProductView"
-
-
-
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -244,16 +239,13 @@ export default class App extends Component {
               <Route exact path="/cart" component={Cart} />
               <Route exact path="/add-product" component={AddProduct} />
               <Route path="/" exact component={ProductListAdmin} />
-              <Route path="/ModifierInstrument" component={ModifierInstrument} />
+              <Route path="/updateIns/:IDInstrument" component={UpdateInstrumentPage} />
               <Route exact path="/add-categorie" component={AddCategorie} />
               {this.state.user && this.state.user.accessLevel > 0 && (
               <Route exact path="/products" component={ProductList} />)}
               {this.state.user && this.state.user.accessLevel <= 0  && (
               <Route exact path="/products" component={ProductListAdmin} />)}
                 <Route path="/categorieListAdmin" component={CategoryListAdmin} />
-                <Route path="/ModifierCategorie" component={modifierCategorie} />
-                <Route path="/product-details" component={ProductView} />
-
             </Switch>
           </div>
         </Router>

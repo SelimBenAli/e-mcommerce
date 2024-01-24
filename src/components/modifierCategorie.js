@@ -5,36 +5,47 @@ import { Redirect } from "react-router-dom";
 const initState = {
   nom: "",
   description: "",
+
 };
 
-class AddCategorie extends Component {
+class modifierCategorie extends Component {
   constructor(props) {
+    
     super(props);
-    this.state = initState;
+       
+        this.state = {
+          ...initState,
+          CatId: null, 
+        };
   }
-
+  componentDidMount() {
+    const { state } = this.props.location;
+    this.setState({
+        CatId: state.CatId,
+        nom: state.instNom || "", 
+        description:state.instDesc,
+      });
+  }
   save = async (e) => {
     e.preventDefault();
-    const { nom, description } = this.state;
+    const {CatId, nom, description } = this.state;
     if (nom && description) {
       try {
-        const response = await fetch("http://192.168.1.13:8086/api/create-categorie", {
+        const response = await fetch("http://192.168.1.13:8086/api/update-categorie", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
+            CatId,
             nom,
             description,
           }),
         });
 
         if (response.ok) {
-          await this.props.context.AddCategorie({
-            nom,
-            description,
-          });
-          this.setState(initState);
+            console.log("Categorie modified successfully");
+            this.setState(initState);
         } else {
           console.error("Failed to save:", response.statusText);
         }
@@ -58,7 +69,7 @@ class AddCategorie extends Component {
       <Fragment>
         <div className="hero is-primary ">
           <div className="hero-body container">
-          <h4 className="title">Add Categorie </h4>
+          <h4 className="title">Modifier Categorie </h4>
           </div>
         </div>
         <br />
@@ -106,4 +117,4 @@ class AddCategorie extends Component {
   }
 }
 
-export default withContext(AddCategorie);
+export default withContext(modifierCategorie);

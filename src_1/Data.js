@@ -1,5 +1,5 @@
 const fetchData = async () => {
-  const Url = 'http://192.168.1.13:8086'
+  const Url = 'http://127.0.0.1:8086'
   try {
     const response_elements = await fetch(Url + '/api/load-instrument');
     data.initProducts = [await response_elements.json()];

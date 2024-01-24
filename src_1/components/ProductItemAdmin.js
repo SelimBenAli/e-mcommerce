@@ -1,18 +1,21 @@
+
+{/*    ########################    */}
+
 import React from "react";
-import { Link } from "react-router-dom";
 
-const ProductItem = props => {
+const ProductItemAdmin = props => {
+  console.log('////////', product)
   const { product } = props;
-  console.log('/////////', product.IDInstrument)
-  return (
+  console.log('////////', product)
 
-    <Link to={{ pathname: "/product-details", state: {IDInstrument: product.IDInstrument, Nom: product.name, Stock: product.stock, Prix: product.price, Desc: product.description, shortDesc: product.shortDesc}}} className=" column is-half">
+  return (
+    <div className=" column is-half">
       <div className="box">
         <div className="media">
           <div className="media-left">
             <figure className="image is-64x64">
               <img
-                src={`http://192.168.1.13:8086/static/${product.IDInstrument}.png`}
+                src="https://bulma.io/images/placeholders/128x128.png"
                 alt="product"
               />
             </figure>
@@ -46,8 +49,8 @@ const ProductItem = props => {
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 
-export default ProductItem;
+export default ProductItemAdmin;
