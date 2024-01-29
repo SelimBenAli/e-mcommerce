@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import { useProductView } from "./useProductView";
+import RatingStars from './RatingStars';
+
+
 import {
   Row,
   Col,
@@ -22,61 +25,62 @@ const initState = {
   instPrix: 0.0,
   instDesc: "",
   instShortDesc: "",
-  reviews: []
+  reviews: [],
+  clientID: 0
 };
 
 class ProductView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-          ...initState
+      ...initState,
+      newReview: {
+        rating: 0,
+        comment: "",
+        clientID: 0,
+      },
     };
   }
 
   componentDidMount() {
     // Access the product from the location state
     const { state } = this.props.location;
-    console.log('##', state.IDInstrument)
+    console.log('##', state.clientID)
     this.setState({
       instrumentId: state.IDInstrument,
       instNom: state.Nom,
       instStock: state.Stock,
       instPrix: state.Prix,
       instDesc: state.Desc,
-      instShortDesc: state.shortDesc
+      instShortDesc: state.shortDesc,
+      clientID: state.clientID
     });
-    console.log(state.instrumentId); 
+    console.log(state.instrumentId);
 
     this.getReviewsAPI(state.IDInstrument);
-
   }
 
   getReviewsAPI = (x) => {
-    const { instrumentId } = this.state;
-
-    // Your API endpoint URL
-    const apiUrl = "http://192.168.1.13:8086/api/get-reviews";
-
-    fetch(apiUrl, {
-      method: "POST",
+  const { instrumentId } = this.state;
+  const apiUrl = "http://127.0.0.1:8086/api/get-reviews";
+  fetch(apiUrl, {
+       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ IDInstrument: x }),
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log("API Response:", data);
-          this.setState({
-            reviews: data.liste
-          })
-      })
-      .catch(error => {
-        console.error("API Error:", error);
-        // Handle errors
-      });
-  };
-
+         "Content-Type": "application/json",
+       },
+       body: JSON.stringify({ IDInstrument: x }),
+     })
+       .then(response => response.json())
+       .then(data => {
+         console.log("API Response:", data);
+         this.setState({
+           reviews: data.liste
+         })
+       })
+       .catch(error => {
+         console.error("API Error:", error);
+       });
+   };
 
   renderStarRating(rating) {
     const maxStars = 5;
@@ -109,7 +113,7 @@ class ProductView extends Component {
 
     return reviews.map((review, index) => (
       <div key={index}>
-                <hr /> {/* Add a horizontal line to separate reviews */}
+        <hr /> {/* Add a horizontal line to separate reviews */}
 
         <CardSubtitle>
           <strong>Rating: {this.renderStarRating(review[0])}</strong>
@@ -125,44 +129,110 @@ class ProductView extends Component {
     ));
   }
 
+  // Handle input changes in the review form
+  handleReviewChange = (e) => {
+    const { name, value } = e.target;
+    this.setState((prevState) => ({
+      newReview: {
+        ...prevState.newReview,
+        [name]: value,
+      },
+    }));
+  };
 
+  // Handle form 
+  handleReviewSubmit = (e) => {
+    e.preventDefault();
+    // You can add additional validation here if needed
+    const { newReview } = this.state;
+    const { instrumentId } = this.props.location.state;
+
+    // Make an API call to submit the review
+    // You might want to extract this logic into a separate function
+    // and handle the API call in a more modular way
+    fetch("http://127.0.0.1:8086/api/submit-review", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        IDInstrument: instrumentId,
+        rating: newReview.rating,
+        comment: newReview.comment,
+        clientName: newReview.clientName,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Review submitted successfully:", data);
+        // You might want to update the state to refresh the reviews
+        // this.getReviewsAPI(instrumentId); // Commented out the API call since you requested it without the review API
+        // Optionally, you can reset the form
+        this.setState({
+          newReview: {
+            rating: 0,
+            comment: "",
+            clientName: "",
+          },
+        });
+      })
+      .catch((error) => {
+        console.error("Error submitting review:", error);
+        // Handle errors
+      });
+  };
 
   render() {
-    const { instrumentId, instNom, instStock, instPrix, instDesc, instShortDesc, reviews } = this.state;
+    const { instrumentId, instNom, instStock, instPrix, instDesc, instShortDesc, reviews, newReview, clientID  } = this.state;
     return (
-    <Card className="product-details">
-      <Row>
-        <Col sm="12" md="4">
-          <CardImg
-            left="true"
-            width="30%"
-            src={`http://192.168.1.13:8086/static/${instrumentId}.png`}
-            alt=""
-          />
-        </Col>
-        <Col sm="12" md="8">
-          <CardBody>
-            <CardTitle>{instNom}</CardTitle>
-            <CardText>{instShortDesc}</CardText>
-            <CardText>{instDesc}</CardText>
-            <CardSubtitle>
-              <strong>Price: {instPrix}</strong>
-            </CardSubtitle>
-            <CardSubtitle>
-              <strong>stock: {instStock}</strong>
-            </CardSubtitle>
+      <table className="table">
+        <Card className="product-details">
+          <Row>
+            <tr>
+              <td>
+                <Col sm="12" md="4">
+                  <CardImg
+                    left="true"
+                    width="30%"
+                    src={`http://127.0.0.1:8086/static/${instrumentId}.png`}
+                    alt=""
+                  />
+                </Col>
+              </td>
+              <td>
+                <Col sm="12" md="8">
+                  <CardBody>
+                    <CardTitle>{instNom}</CardTitle>
+                    <CardText>{instShortDesc}</CardText>
+                    <CardText>{instDesc}</CardText>
+                    <CardSubtitle>
+                      <strong>Price: {instPrix}</strong>
+                    </CardSubtitle>
+                    <CardSubtitle>
+                      <strong>stock: {instStock}</strong>
+                    </CardSubtitle>
+                    <Button className="button is-primary is-outlined">Add to card</Button>
+                  </CardBody>
+                </Col>
+              </td>
+            </tr>
+            <tr>
+              <td colSpan="">
+                
+              <RatingStars onRatingChange={(newRating) => console.log('New Rating:', newRating)} clientId={{clientID}} instId={instrumentId}/>
 
-            {this.renderReviews()}
-            <hr />
+
+                  
+              </td>
+              <td>{this.renderReviews()}
+            <hr /></td>
+            </tr>
             
-            
-            
-            <Button color="primary">Add to basket</Button>
-          </CardBody>
-        </Col>
-      </Row>
-    </Card>
-  );}
-};
+          </Row>
+        </Card>
+      </table>
+    );
+  }
+}
 
 export default ProductView;

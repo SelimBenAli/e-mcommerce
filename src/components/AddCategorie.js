@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react";
 import withContext from "../withContext";
 import { Redirect } from "react-router-dom";
+import "../index.css";
 
 const initState = {
   nom: "",
@@ -18,7 +19,7 @@ class AddCategorie extends Component {
     const { nom, description } = this.state;
     if (nom && description) {
       try {
-        const response = await fetch("http://192.168.1.13:8086/api/create-categorie", {
+        const response = await fetch("http://127.0.0.1:8086/api/create-categorie", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -30,6 +31,8 @@ class AddCategorie extends Component {
         });
 
         if (response.ok) {
+          this.props.history.push('/categorieListAdmin');
+          window.location.reload();
           await this.props.context.AddCategorie({
             nom,
             description,
@@ -56,7 +59,7 @@ class AddCategorie extends Component {
       <Redirect to="/" />
     ) : (
       <Fragment>
-        <div className="hero is-primary ">
+        <div className="hero qss ">
           <div className="hero-body container">
           <h4 className="title">Add Categorie </h4>
           </div>

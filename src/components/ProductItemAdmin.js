@@ -1,6 +1,4 @@
 
-{/*    ########################    */}
-
 
 const ProductItemAdmin = props => {
   console.log('////////', product)

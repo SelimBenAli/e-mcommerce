@@ -36,7 +36,7 @@ export default function Signup() {
     ) {
       setValid(true);
       try {
-        const response = await fetch('http://127.0.0.1:8086/api/creation-user', {
+        const response = await fetch('http://192.168.1.13:8086/api/creation-user', {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

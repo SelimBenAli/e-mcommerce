@@ -68,46 +68,19 @@ export default class App extends Component {
     this.setState({ products }, () => callback && callback());
   };
 
-  addToCart = async (cartItem) => {
-    try {
-      console.log('****----', cartItem.uid)
-      // Make a POST request to the API endpoint
-      const response = await fetch('http://127.0.0.1:8086/api/ajout-panier', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          // Add any other headers if required
-        },
-        body: JSON.stringify({
-          productId: cartItem.id,
-          userId: cartItem.uid,
-          amount: cartItem.amount,
-        }),
-      });
-  
-      // Check if the request was successful (status code 200)
-      if (response.ok) {
-        // If successful, update the local state and storage
-        let cart = this.state.cart;
-        if (cart[cartItem.id]) {
-          cart[cartItem.id].amount += cartItem.amount;
-        } else {
-          cart[cartItem.id] = cartItem;
-        }
-        if (cart[cartItem.id].amount > cart[cartItem.id].product.stock) {
-          cart[cartItem.id].amount = cart[cartItem.id].product.stock;
-        }
-        localStorage.setItem("cart", JSON.stringify(cart));
-        this.setState({ cart });
-      } else {
-        // Handle error cases if needed
-        console.error('Failed to add item to the cart');
-      }
-    } catch (error) {
-      console.error('Error adding item to the cart:', error);
+  addToCart = cartItem => {
+    let cart = this.state.cart;
+    if (cart[cartItem.id]) {
+      cart[cartItem.id].amount += cartItem.amount;
+    } else {
+      cart[cartItem.id] = cartItem;
     }
+    if (cart[cartItem.id].amount > cart[cartItem.id].product.stock) {
+      cart[cartItem.id].amount = cart[cartItem.id].product.stock;
+    }
+    localStorage.setItem("cart", JSON.stringify(cart));
+    this.setState({ cart });
   };
-  
 
   checkout = () => {
     if (!this.state.user) {
@@ -125,72 +98,18 @@ export default class App extends Component {
     this.clearCart();
   };
 
-  removeFromCart = (cartItemId, userId) => {
-    // Prepare the request payload
-    const requestBody = {
-        userId: userId,
-        idIns: cartItemId, // Assuming isInstrument is a constant value, you can modify this accordingly
-    };
-
-    // Make a POST request
-    fetch('http://127.0.0.1:8086/api/supprimer-panier', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            // Add any other headers if needed
-        },
-        body: JSON.stringify(requestBody),
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        // Handle the response data as needed
-        let cart = this.state.cart;
-        delete cart[cartItemId];
-        localStorage.setItem('cart', JSON.stringify(cart));
-        this.setState({ cart });
-    })
-    .catch(error => {
-        // Handle errors
-        console.error('There was a problem with the fetch operation:', error);
-    });
-};
-
-
-clearCart = (userId) => {
-  // Assuming you have a server endpoint for clearCart
-  const apiUrl = 'http://127.0.0.1:8086/api/reset-panier';
-
-  // Create the request body with the userId
-  const requestBody = {
-    userId: userId,
+  removeFromCart = cartItemId => {
+    let cart = this.state.cart;
+    delete cart[cartItemId];
+    localStorage.setItem("cart", JSON.stringify(cart));
+    this.setState({ cart });
   };
 
-  // Make the POST API call
-  fetch(apiUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      // Add any other headers if needed
-    },
-    body: JSON.stringify(requestBody),
-  })
-    .then(response => response.json())
-    .then(data => {
-      // Assuming the server responds with updated cart data
-      localStorage.setItem("cart", JSON.stringify(data));
-      this.setState({ cart: data });
-    })
-    .catch(error => {
-      // Handle errors if any
-      console.error('Error during clearCart API call:', error);
-    });
-};
-
+  clearCart = () => {
+    let cart = {};
+    localStorage.setItem("cart", JSON.stringify(cart));
+    this.setState({ cart });
+  };
 
   async componentDidMount() {
     try 
@@ -201,7 +120,6 @@ clearCart = (userId) => {
         let user = localStorage.getItem("user");
         let categories = localStorage.getItem("categories")
         console.log(data)
-        console.log(user)
         console.log('*', data.initProducts[0].initProducts)
         products = products ? JSON.parse(products) : data.initProducts[0].initProducts;
         products = data.initProducts[0].initProducts;
@@ -209,7 +127,6 @@ clearCart = (userId) => {
         console.log(categories)
         cart = cart ? JSON.parse(cart) : {};
         user = user ? JSON.parse(user) : null;
-        console.log(user)
         this.setState({ categories, products, user, cart });
     }
     catch (error) {
@@ -318,7 +235,6 @@ clearCart = (userId) => {
               </div>
             </nav>
             <Switch>
-            
             {this.state.user && this.state.user.accessLevel > 0 && (
               <Route exact path="/" component={ProductList} />)}
               {this.state.user && this.state.user.accessLevel <= 0 && (

@@ -3,70 +3,51 @@ import withContext from "../withContext";
 import { Link } from "react-router-dom";
 
 class ProductListAdmin extends Component {
-  state = {
-    searchQuery: "",
-  };
-
   deleteProduct = async (productId) => {
     console.log("delete", productId);
-    try {
-      const response = await fetch("http://127.0.0.1:8086/api/delete-instrument", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          productId,
-        }),
-      });
-
-      if (response.ok) {
-        this.props.history.push('/');
-          window.location.reload();
-        await this.props.context.AddCategorie({
-          productId,
+      try {
+        const response = await fetch("http://192.168.1.13:8086/api/delete-instrument", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            productId,
+          }),
         });
-        
-      } else {
-        console.error("Failed to save:", response.statusText);
+
+        if (response.ok) {
+          await this.props.context.AddCategorie({
+            productId,
+          });
+        } else {
+          console.error("Failed to save:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error during save:", error.message);
       }
-    } catch (error) {
-      console.error("Error during save:", error.message);
-    }
+     
   };
 
-  handleChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value, error: "" });
-  };
+  handleChange = (e) => this.setState({ [e.target.name]: e.target.value, error: "" });
 
+  
   render() {
     const { products } = this.props.context;
-    const { searchQuery } = this.state;
-
-    const filteredProducts =
-      searchQuery === ""
-        ? products
-        : products.filter((product) =>
-            product.name.toLowerCase().includes(searchQuery.toLowerCase())
-          );
 
     return (
       <Fragment>
         <div className="hero qss">
           <div className="hero-body container">
-            <div className="field has-addons">
-              <div className="control">
-                <input
-                  className="input"
-                  type="text"
-                  placeholder="Search"
-                  name="searchQuery"
-                  value={searchQuery}
-                  onChange={this.handleChange}
-                />
-              </div>
-            </div>
-          </div>
+          <div className="field has-addons">
+      <div className="control">
+        <input className="input" type="text" placeholder="Search" />
+      </div>
+      {/* <div className="control">
+        <button className="button is-info">Search</button>
+      </div> */}
+      </div>
+        </div>
         </div>
 
         <br />
@@ -82,11 +63,12 @@ class ProductListAdmin extends Component {
                     <th>Stock</th>
                     <th>Supprimer</th>
                     <th>Modifier</th>
+                    {/* <th>Type</th> */}
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredProducts && filteredProducts.length ? (
-                    filteredProducts.map((product, index) => (
+                  {products && products.length ? (
+                    products.map((product, index) => (
                       <tr key={index}>
                         <td>{product.IDInstrument}</td>
                         <td>{product.name}</td>
@@ -103,22 +85,15 @@ class ProductListAdmin extends Component {
                           </button>
                         </td>
                         <td>
-                          <Link
-                            to={{
-                              pathname: "/ModifierInstrument",
-                              state: {
-                                instrumentId: product.IDInstrument,
-                                instName: product.name,
-                                instPrice: product.price,
-                                instStock: product.stock,
-                                intshortDesc: product.shortDesc,
-                                intDesc: product.description,
-                              },
-                            }}
-                            className="button is-success"
-                          >
-                            Modifier
-                          </Link>
+                        <Link
+                          to={{
+                            pathname: '/ModifierInstrument',
+                            state: { instrumentId: product.IDInstrument,instName:product.name,instPrice:product.price,instStock:product.stock,intshortDesc:product.shortDesc,intDesc:product.description}
+                          }}
+                          className="button is-success"
+                        >
+                          Modifier
+                        </Link>
                         </td>
                       </tr>
                     ))

@@ -1,0 +1,35 @@
+/* signup.css */
+
+.form-container {
+    max-width: 400px;
+    margin: auto;
+  }
+  
+  .register-form {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-field {
+    margin-bottom: 15px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .success-message {
+    margin-top: 20px;
+    color: #4caf50;
+    font-weight: bold;
+  }
+  
+  .error-message {
+    color: #f44336;
+  }
+  
+  

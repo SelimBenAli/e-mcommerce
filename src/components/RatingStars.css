@@ -1,0 +1,42 @@
+/* RatingStars.css */
+
+.rating-stars {
+    font-size: 0px; 
+  }
+  
+  .rating-stars button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    transition: transform 0.3s; /* Smooth transition for size change */
+  }
+  
+  .rating-stars button:focus {
+    outline: none;
+  }
+  
+  .star-filled {
+    color: orange; /* Color for filled stars */
+  }
+  
+  .star-empty {
+    color: gray; /* Initial color for empty stars */
+  }
+  
+  /* Change size of stars on hover or focus */
+  .rating-stars button:hover,
+  .rating-stars button:focus {
+    transform: scale(1.2);
+    color: orange; /* Increase size on hover or focus */
+  }
+.table{
+    width:100%;
+}
+.form{
+    bottom: 0;
+    padding-top: 50px;
+    
+}

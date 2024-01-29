@@ -1,39 +1,52 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import ProductItem from "./ProductItem";
 import withContext from "../withContext";
 import "../index.css";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
-  
 
-const ProductList = props => {
-  const { products } = props.context;
+const ProductList = (props) => {
+  const { products, user } = props.context;
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredProducts =
+    searchQuery === ""
+      ? products
+      : products.filter((product) =>
+          product.name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+
   return (
     <Fragment>
-      <div className="hero qss" >
+      <div className="hero qss">
         <div className="hero-body container">
-        <div className="field has-addons">
-      <div className="control">
-        <input className="input" type="text" placeholder="Search" />
-      </div>
-      {/* <div className="control">
-        <button className="button is-info">Search</button>
-      </div> */}
-      </div>
-        </div>        
+          <div className="field has-addons">
+            <div className="control">
+              <input
+                className="input"
+                type="text"
+                placeholder="Search"
+                value={searchQuery}
+                onChange={handleSearchChange}
+              />
+            </div>
+          </div>
+        </div>
       </div>
       <br />
       <div className="container">
         <div className="column columns is-multiline">
-          {products && products.length ? (
-            products.map((product, index) => (
-              
-                <ProductItem
-                
-                  product={product}
-                  key={index}
-                  addToCart={props.context.addToCart}
-                />
-              
+          {filteredProducts && filteredProducts.length ? (
+            filteredProducts.map((product, index) => (
+              <ProductItem
+                user={user}
+                product={product}
+                key={index}
+                addToCart={props.context.addToCart}
+              />
             ))
           ) : (
             <div className="column">

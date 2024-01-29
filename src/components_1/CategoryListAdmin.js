@@ -1,17 +1,13 @@
-import React, { Fragment, Component } from "react";
+import React, { Fragment, Component } from "react"; 
 import withContext from "../withContext";
 import "../index.css";
 import { Link } from "react-router-dom";
 
-class CategoryListAdmin extends Component {
-  state = {
-    searchQuery: "",
-  };
-
-  deleteCategory = async (categoryId) => {
+class CategoryListAdmin extends Component { 
+  deleteCategory = async (categoryId) => { 
     console.log("delete", categoryId);
     try {
-      const response = await fetch("http://127.0.0.1:8086/api/delete-categorie", {
+      const response = await fetch("http://192.168.1.13:8086/api/delete-categorie", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -22,8 +18,6 @@ class CategoryListAdmin extends Component {
       });
 
       if (response.ok) {
-        this.props.history.push('/categorieListAdmin');
-          window.location.reload();
         await this.props.context.AddCategorie({
           categoryId,
         });
@@ -35,20 +29,10 @@ class CategoryListAdmin extends Component {
     }
   };
 
-  handleChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value, error: "" });
-  };
+  handleChange = (e) => this.setState({ [e.target.name]: e.target.value, error: "" }); 
 
   render() {
-    const { categories } = this.props.context;
-    const { searchQuery } = this.state;
-
-    const filteredCategories =
-      searchQuery === ""
-        ? categories
-        : categories.filter((category) =>
-            category.Nom.toLowerCase().includes(searchQuery.toLowerCase())
-          );
+    const { categories } = this.props.context; 
 
     return (
       <Fragment>
@@ -56,15 +40,11 @@ class CategoryListAdmin extends Component {
           <div className="hero-body container">
             <div className="field has-addons">
               <div className="control">
-                <input
-                  className="input"
-                  type="text"
-                  placeholder="Search"
-                  name="searchQuery"
-                  value={searchQuery}
-                  onChange={this.handleChange}
-                />
+                <input className="input" type="text" placeholder="Search" />
               </div>
+              {/* <div className="control">
+                <button className="button is-info">Search</button>
+              </div> */}
             </div>
           </div>
         </div>
@@ -83,8 +63,8 @@ class CategoryListAdmin extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredCategories && filteredCategories.length ? (
-                    filteredCategories.map((category, index) => (
+                  {categories && categories.length ? (
+                    categories.map((category, index) => (
                       <tr key={index}>
                         <td>{category.IDCategorie}</td>
                         <td>{category.Nom}</td>
@@ -92,21 +72,21 @@ class CategoryListAdmin extends Component {
                         <td>
                           <button
                             className="button is-danger"
-                            onClick={() => this.deleteCategory(category.IDCategorie)}
+                            onClick={() => this.deleteCategory(category.IDCategorie)} // Add 'this.' to reference class method
                           >
                             Supprimer
                           </button>
                         </td>
                         <td>
-                          <Link
-                            to={{
-                              pathname: '/modifierCategorie',
-                              state: { CatId: category.IDCategorie, instNom: category.Nom, instDesc: category.Description }
-                            }}
-                            className="button is-success"
-                          >
-                            Modifier
-                          </Link>
+                        <Link
+                          to={{
+                            pathname: '/modifierCategorie',
+                            state: { CatId: category.IDCategorie,instNom:category.Nom,instDesc:category.Description}
+                          }}
+                          className="button is-success"
+                        >
+                          Modifier
+                        </Link>
                         </td>
                       </tr>
                     ))

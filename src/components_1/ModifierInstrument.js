@@ -18,7 +18,7 @@ const initState = {
   instStock: 0,
 };
 
-const Url = "http://127.0.0.1:8086";
+const Url = "http://192.168.1.13:8086";
 
 class ModifierInstrument extends Component {
     
@@ -74,8 +74,6 @@ class ModifierInstrument extends Component {
           // Product added successfully, you can handle the response as needed
           console.log("Product modified successfully");
           this.setState(initState);
-          this.props.history.push('/');
-          window.location.reload();
         } else {
           // Handle errors
           console.error("Failed to modify product");

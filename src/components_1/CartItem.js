@@ -1,9 +1,8 @@
 import React from "react";
 
 const CartItem = props => {
-  const { cartItem, cartKey, userId } = props;
+  const { cartItem, cartKey } = props;
   const { product, amount } = cartItem;
-  console.log('/*/*/*', cartItem, userId)
   return (
     <div className=" column is-half">
       <div className="box">
@@ -11,22 +10,22 @@ const CartItem = props => {
           <div className="media-left">
             <figure className="image is-64x64">
               <img
-                src={`http://127.0.0.1:8086/static/${cartItem.IDInstrument}.png`}
+                src="https://bulma.io/images/placeholders/128x128.png"
                 alt="product"
               />
             </figure>
           </div>
           <div className="media-content">
             <b style={{ textTransform: "capitalize" }}>
-              {cartItem.name}{" "}
-              <span className="tag is-primary">${cartItem.price}</span>
+              {product.name}{" "}
+              <span className="tag is-primary">${product.price}</span>
             </b>
-            <div>{cartItem.shortDesc}</div>
-            <small>{`${cartItem.qte} in cart`}</small>
+            <div>{product.shortDesc}</div>
+            <small>{`${amount} in cart`}</small>
           </div>
           <div
             className="media-right"
-            onClick={() => props.removeFromCart(cartItem.IDInstrument, userId)}
+            onClick={() => props.removeFromCart(cartKey)}
           >
             <span className="delete is-large"></span>
           </div>

@@ -31,7 +31,7 @@ class modifierCategorie extends Component {
     const {CatId, nom, description } = this.state;
     if (nom && description) {
       try {
-        const response = await fetch("http://127.0.0.1:8086/api/update-categorie", {
+        const response = await fetch("http://192.168.1.13:8086/api/update-categorie", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -46,8 +46,6 @@ class modifierCategorie extends Component {
         if (response.ok) {
             console.log("Categorie modified successfully");
             this.setState(initState);
-            this.props.history.push('/categorieListAdmin');
-          window.location.reload();
         } else {
           console.error("Failed to save:", response.statusText);
         }
